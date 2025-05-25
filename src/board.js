@@ -26,4 +26,18 @@ class Board {
 
     return p
     }
+
+    isInsideWalls(x, y) {
+      return (
+        x >= 0 && x < COLS && y < ROWS
+      )
+    }
+
+    valid(p) {
+      return p.shape.every((row, y) => {
+        return row.every((value, x) => 
+          value === 0 || this.isInsideWalls(p.x + x, p.y + y)
+        )
+      })
+    }
 }

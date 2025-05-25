@@ -26,16 +26,26 @@ const moves = {
   [KEY.RIGHT]: (p) => ({...p, x: p.x + 1}),
   [KEY.DOWN]: (p) => ({...p, y: p.y + 1}),
   [KEY.UP]: (p) => board.rotate(p),
+  [KEY.SPACE]: (p) => ({...p, y: p.y + 1})
 };
 
 function handleKeyPress(event) {
     event.preventDefault();
 
     if (moves[event.keyCode]) {
-        let p = moves[event.keyCode](board.piece);
+      let p = moves[event.keyCode](board.piece);
 
+      if (event.keyCode === KEY.SPACE) {
+        while (board.valid(p)){
+          board.piece.move(p);
+          p = moves[KEY.SPACE](board.piece)
+        }
+      }
+      
+      if (board.valid(p)) {
         board.piece.move(p);
         draw();
+      }
     }
 }
 
