@@ -56,6 +56,7 @@ class Board {
       } else {
         this.freeze();
         this.piece = new Piece(this.ctx);
+        this.clearLines();
       }
     }
 
@@ -78,6 +79,15 @@ class Board {
             this.ctx.fillRect(x, y, 1, 1);
           }
         })
+      })
+    }
+
+    clearLines() {
+      this.grid.forEach((row, y) => {
+        if (row.every(value => value > 0)) {
+          this.grid.splice(y, 1);
+          this.grid.unshift(Array(COLS).fill(0))
+        }
       })
     }
 }
