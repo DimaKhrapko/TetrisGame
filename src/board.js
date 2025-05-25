@@ -55,9 +55,13 @@ class Board {
         this.piece.move(p);
       } else {
         this.freeze();
+        if (this.piece.y === 0) {
+          return false;
+        }
         this.piece = new Piece(this.ctx);
         this.clearLines();
       }
+      return true
     }
 
     freeze() {
