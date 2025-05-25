@@ -9,9 +9,14 @@ ctx.canvas.height = ROWS * BLOCK_SIZE;
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 function play() {
-    board = new Board(ctx);
-    draw()
-    addEventListener();
+  board = new Board(ctx)
+  addEventListener();
+
+  if(requestID) {
+    cancelAnimationFrame(requestID);
+  }
+  time.start = performance.now();
+  animate();
 }
 
 function draw() {
@@ -28,6 +33,8 @@ const moves = {
   [KEY.UP]: (p) => board.rotate(p),
   [KEY.SPACE]: (p) => ({...p, y: p.y + 1})
 };
+
+let requestID = null;
 
 function handleKeyPress(event) {
     event.preventDefault();
@@ -52,4 +59,26 @@ function handleKeyPress(event) {
 function addEventListener() {
     document.removeEventListener('keydown', handleKeyPress);
     document.addEventListener('keydown', handleKeyPress)
+}
+
+function drop() {
+  let p = moves[KEY.DOWN](board.piece);
+  if (board.valid(p)) {
+    board.piece.move(p);
+  }
+}
+
+let time = {start: 0, elapsed: 0, level: 1000}
+
+function animate(now = 0) {
+  time.elapsed = now - time.start
+  
+  if(time.elapsed > time.level) {
+    time.start = now;
+
+    drop();
+  }
+
+  draw()
+  requestID = requestAnimationFrame(animate)
 }
