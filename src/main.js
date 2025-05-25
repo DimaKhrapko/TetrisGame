@@ -21,8 +21,9 @@ function play() {
 
 function draw() {
     const { width, height } = ctx.canvas;
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    board.draw();
     board.piece.draw()
 }
 
@@ -61,13 +62,6 @@ function addEventListener() {
     document.addEventListener('keydown', handleKeyPress)
 }
 
-function drop() {
-  let p = moves[KEY.DOWN](board.piece);
-  if (board.valid(p)) {
-    board.piece.move(p);
-  }
-}
-
 let time = {start: 0, elapsed: 0, level: 1000}
 
 function animate(now = 0) {
@@ -76,7 +70,7 @@ function animate(now = 0) {
   if(time.elapsed > time.level) {
     time.start = now;
 
-    drop();
+    board.drop();
   }
 
   draw()
