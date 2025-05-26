@@ -1,16 +1,18 @@
 "use strict"
 
 class Board {
-    constructor(ctx) {
-        this.ctx = ctx;
-        this.grid = this.getEmptyBoard()
-        this.piece = new Piece(ctx)
+    constructor(ctx, ctxNext) {
+      this.ctx = ctx;
+      this.ctxNext = ctxNext;
+      this.grid = this.getEmptyBoard();
+      this.setNextPiece();
+      this.setCurrentPiece();
     }
 
     getEmptyBoard(){
-        return Array.from(
-            {length: ROWS}, () => Array(COLS).fill(0)
-        );
+      return Array.from(
+        {length: ROWS}, () => Array(COLS).fill(0)
+      );
     }
 
     rotate(piece) {
@@ -52,16 +54,17 @@ class Board {
       let p = moves[KEY.DOWN](this.piece);
 
       if (this.valid(p)) {
-        this.piece.move(p);
-      } else {
+        this.piece.move(p)
+      }
+      else {
         this.freeze();
+        this.clearLines();
         if (this.piece.y === 0) {
           return false;
         }
-        this.piece = new Piece(this.ctx);
-        this.clearLines();
+        this.setCurrentPiece();
       }
-      return true
+      return true;
     }
 
     freeze() {
@@ -75,7 +78,6 @@ class Board {
     }
     
     draw() {
-      // this.ctx.fillStyle = this.color;
       this.grid.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value > 0) {
@@ -89,25 +91,49 @@ class Board {
     clearLines() {
       let lines = 0;
       this.grid.forEach((row, y) => {
-        if (row.every(value => value !== 0)) {
+        if (row.every(value => value > 0)) {
           lines++;
 
           this.grid.splice(y, 1);
-          this.grid.unshift(Array(COLS).fill(0))
-        }
-      });
+          
+          this.grid.unshift(Array(COLS).fill(0));
 
-      if (lines > 0) {
-        account.score += this.getLineClearPoints(lines)
-      }
+          if (lines > 0) {
+            account.score += this.getLineClearPoints(lines);
+            account.lines += lines;
+
+            if (account.lines >= LINES_PER_LEVEL) {
+              account.level++;
+
+              account.lines -= LINES_PER_LEVEL;
+              time.level = LEVEL[account.level];
+            }
+          }
+        }
+      })
     }
 
     getLineClearPoints(lines) {
-      return lines === 1 ? POINTS.SINGLE :
+      const lineClearPoints =
+      lines === 1 ? POINTS.SINGLE :
       lines === 2 ? POINTS.DOUBLE :
       lines === 3 ? POINTS.TRIPLE :
       lines === 4 ? POINTS.TETRIS : 0;
+
+      return (account.level + 1) * lineClearPoints;
     }
 
+    setNextPiece() {
+      const { width, height } = this.ctxNext.canvas;
+      this.nextPiece = new Piece(this.ctxNext);
+      this.ctxNext.clearRect(0, 0, width, height);
+      this.nextPiece.draw();
+    }
 
+    setCurrentPiece() {
+      this.piece = this.nextPiece;
+      this.piece.ctx = this.ctx;
+      this.piece.x = 3;
+      this.setNextPiece();
+    }
 }

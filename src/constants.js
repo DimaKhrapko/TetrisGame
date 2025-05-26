@@ -4,6 +4,8 @@ const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 30;
 
+const LINES_PER_LEVEL = 10;
+
 const COLORS = [
   'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
 ]
@@ -37,3 +39,9 @@ const POINTS = {
   HARD_DROP: 2,
 }
 
+const LEVEL = {
+  0: 800,
+  1: 720,
+  2: 630,
+  3: 550,
+}
