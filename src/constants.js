@@ -4,8 +4,6 @@ const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 30;
 
-let board = null;
-
 const COLORS = [
   'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
 ]
@@ -29,4 +27,13 @@ const KEY = {
 }
 
 Object.freeze(KEY);
+
+const POINTS = {
+  SINGLE: 100,
+  DOUBLE: 300,
+  TRIPLE: 500,
+  TETRIS: 800,
+  SOFT_DROP: 1,
+  HARD_DROP: 2,
+}
 

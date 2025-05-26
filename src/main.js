@@ -8,6 +8,38 @@ ctx.canvas.height = ROWS * BLOCK_SIZE;
 
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
+const moves = {
+  [KEY.LEFT]: (p) => ({...p, x: p.x - 1}),
+  [KEY.RIGHT]: (p) => ({...p, x: p.x + 1}),
+  [KEY.DOWN]: (p) => ({...p, y: p.y + 1}),
+  [KEY.UP]: (p) => board.rotate(p),
+  [KEY.SPACE]: (p) => ({...p, y: p.y + 1})
+};
+
+let requestID, board;
+
+let time = {start: 0, elapsed: 0, level: 1000};
+
+let accountValues = {
+  score: 0,
+  lines: 0
+};
+
+let account = new Proxy(accountValues, {
+  set: (target, key, value) => {
+    target[key] = value;
+    updateAccount(key, value);
+    return true;
+  }
+})
+
+function updateAccount(key, value) {
+  let element = document.getElementById(key);
+  if (element) {
+    element.textContent = value;
+  }
+}
+
 function play() {
   board = new Board(ctx)
   addEventListener();
@@ -27,16 +59,6 @@ function draw() {
     board.piece.draw()
 }
 
-const moves = {
-  [KEY.LEFT]: (p) => ({...p, x: p.x - 1}),
-  [KEY.RIGHT]: (p) => ({...p, x: p.x + 1}),
-  [KEY.DOWN]: (p) => ({...p, y: p.y + 1}),
-  [KEY.UP]: (p) => board.rotate(p),
-  [KEY.SPACE]: (p) => ({...p, y: p.y + 1})
-};
-
-let requestID = null;
-
 function handleKeyPress(event) {
     event.preventDefault();
 
@@ -46,23 +68,22 @@ function handleKeyPress(event) {
       if (event.keyCode === KEY.SPACE) {
         while (board.valid(p)){
           board.piece.move(p);
+          account.score += POINTS.HARD_DROP;
           p = moves[KEY.SPACE](board.piece)
         }
       }
-      
-      if (board.valid(p)) {
+      else if (board.valid(p)) {
         board.piece.move(p);
-        draw();
+        if (event.keyCode === KEY.DOWN){
+          account.score += POINTS.SOFT_DROP;
+        }
       }
-    }
-}
+}}
 
 function addEventListener() {
     document.removeEventListener('keydown', handleKeyPress);
     document.addEventListener('keydown', handleKeyPress)
 }
-
-let time = {start: 0, elapsed: 0, level: 1000}
 
 function animate(now = 0) {
   time.elapsed = now - time.start
