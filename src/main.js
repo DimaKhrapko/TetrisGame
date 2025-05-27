@@ -32,6 +32,10 @@ let accountValues = {
   level: 0
 };
 
+const highScoreList = document.getElementById(HIGH_SCORES);
+
+showHighScores();
+
 function updateAccount(key, value) {
   let element = document.getElementById(key);
   if (element) {
@@ -125,5 +129,36 @@ function gameOver() {
   ctx.fillRect(1, 3, 8, 1.2);
   ctx.font = '1px Arial';
   ctx.fillStyle = 'red';
-  ctx.fillText('GAME OVER', 1.8, 4)
+  ctx.fillText('GAME OVER', 1.8, 4);
+
+  checkHighScore(account.score)
+}
+
+function checkHighScore(score) {
+  const highScores = JSON.parse(localStorage.getItem(HIGH_SCORES)) || [];
+
+  const lowestScore = highScores[NO_OF_HIGH_SCORES - 1]?.score ?? 0;
+
+  if (score > lowestScore) {
+    saveHighScore(score, highScores);
+    showHighScores();
+  }
+}
+
+function saveHighScore(score, highScores) {
+  const name = prompt('You git a highscore! Enter name:');
+  const newScore = {score, name};
+
+  highScores.push(newScore);
+  highScores.sort((a, b) => b.score - a.score);
+  highScores.splice(NO_OF_HIGH_SCORES);
+  localStorage.setItem(HIGH_SCORES, JSON.stringify(highScores));
+}
+
+function showHighScores() {
+  const highScores = JSON.parse(localStorage.getItem(HIGH_SCORES)) || [];
+  const highScoreList = document.getElementById(HIGH_SCORES);
+  highScoreList.innerHTML = highScores
+  .map((score) => `<li> ${score.score} - ${score.name}`)
+  .join('')
 }

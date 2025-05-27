@@ -6,6 +6,13 @@ const BLOCK_SIZE = 30;
 
 const LINES_PER_LEVEL = 10;
 
+const NO_OF_HIGH_SCORES = 10;
+const HIGH_SCORES = 'highScores';
+
+
+
+const lowestScore = highScores[NO_OF_HIGH_SCORES - 1]?.score ?? 0
+
 const COLORS = [
   'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
 ]
