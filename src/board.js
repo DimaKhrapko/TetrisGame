@@ -71,7 +71,10 @@ class Board {
       this.piece.shape.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value > 0) {
-            this.grid[y + this.piece.y][x + this.piece.x] = value;
+            this.grid[y + this.piece.y][x + this.piece.x] = {
+              value: value,
+              color: this.piece.color
+            };
           }
         })
       })
@@ -79,9 +82,9 @@ class Board {
     
     draw() {
       this.grid.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value > 0) {
-            this.ctx.fillStyle = COLORS[value - 1];
+        row.forEach((cell, x) => {
+          if (cell && cell.value > 0) {
+            this.ctx.fillStyle = cell.color;
             this.ctx.fillRect(x, y, 1, 1);
           }
         })
@@ -91,7 +94,7 @@ class Board {
     clearLines() {
       let lines = 0;
       this.grid.forEach((row, y) => {
-        if (row.every(value => value > 0)) {
+        if (row.every(cell => cell && cell.value > 0)) {
           lines++;
 
           this.grid.splice(y, 1);

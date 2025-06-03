@@ -22,6 +22,8 @@ const moves = {
   [KEY.SPACE]: (p) => ({...p, y: p.y + 1})
 };
 
+const colorGen = colorCycleGenerator(COLORS);
+
 let requestID, board;
 
 let time = {start: 0, elapsed: 0, level: 1000};
@@ -161,4 +163,12 @@ function showHighScores() {
   highScoreList.innerHTML = highScores
   .map((score) => `<li> ${score.score} - ${score.name}`)
   .join('')
+}
+
+function* colorCycleGenerator(COLORS) {
+  let index = 0;
+  while (true) {
+    yield COLORS[index % COLORS.length];
+    index++;
+  }
 }
