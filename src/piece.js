@@ -1,12 +1,35 @@
 "use strict"
 
+function memoizeCreatePiece(fn) {
+  const cache = new Map();
+  return function(typeID, color) {
+    const key = `${typeID} - ${color}`;
+    if (cache.has(key)) {
+      return structuredClone(cache.get(key));
+    }
+    const result = fn(typeID, color);
+    cache.set(key, structuredClone(result));
+    return result;
+  }
+}
+
+const createPieceData = memoizeCreatePiece((typeID, color) => {
+  return {
+    shape: SHAPES[typeID],
+    color: color,
+  }
+})
+
 class Piece {
   constructor(ctx){
     this.ctx = ctx
 
     const typeID = this.randomizeTetrominoType(COLORS.length);
-    this.shape = SHAPES[typeID];
-    this.color = colorGen.next().value;
+    const color = colorGen.next().value;
+    const pieceData = createPieceData(typeID, color);
+
+    this.shape = pieceData.shape;
+    this.color = pieceData.color
 
     this.x = 3;
     this.y = 0;
