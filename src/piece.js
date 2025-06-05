@@ -21,10 +21,10 @@ const createPieceData = memoizeCreatePiece((typeID, color) => {
 })
 
 class Piece {
-  constructor(ctx){
+  constructor(ctx, typeID = null){
     this.ctx = ctx
 
-    const typeID = this.randomizeTetrominoType(COLORS.length);
+    typeID = typeID !== null ? typeID : this.randomizeTetrominoType(COLORS.length);
     const color = colorGen.next().value;
     const pieceData = createPieceData(typeID, color);
 
@@ -59,4 +59,51 @@ class Piece {
   }
 
 
+}
+
+class BiPriorityQueue {
+  constructor() {
+    this.items = [];
+  }
+
+  enqueue(item, priority) {
+    this.items.push({item, priority, time: Date.now()});
+    this.items.sort((a, b) => b.priority - a.priority)
+  }
+
+  dequeue(mode = 'highest') {
+    if (this.items.length === 0) return null;
+
+    switch(mode) {
+      case 'highest':
+        return this.items.shift().item;
+      case 'lowest':
+        return this.items.pop().item;
+      case 'oldest':
+        this.items.sort((a, b) => a.time - b.time);
+        return this.items.shift().item;
+      case 'newest':
+        this.items.sort((a, b) => b.time - a.time);
+        return this.items.shift().item;
+      default:
+        return this.items.shift().item;
+    }
+  }
+
+  peek(mode = 'highest') {
+    if (this.items.length === 0) return null;
+
+    switch (mode) {
+      case 'highest':
+        return this.items[0].item;
+      case 'lowest':
+        return this.items[this.items.length - 1].item;
+      case 'oldest':
+        return [...this.items].sort((a, b) => a.time - b.time)[0].time;
+      case 'newest':
+        return [...this.items].sort((a, b) => b.time - a.time)[0].item
+      default:
+        return this.items[0].item;
+    }
+  }
 }

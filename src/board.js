@@ -134,6 +134,7 @@ class Board {
     }
 
     setCurrentPiece() {
+      this.typeID = getNextPieceType();
       this.piece = this.nextPiece;
       this.piece.ctx = this.ctx;
       this.piece.x = 3;

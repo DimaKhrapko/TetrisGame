@@ -38,6 +38,15 @@ const highScoreList = document.getElementById(HIGH_SCORES);
 
 showHighScores();
 
+const pieceQueue = new BiPriorityQueue();
+let lastTypeID = null;
+
+function initPieceQueue() {
+  for(let i = 0; i < 5; i++){
+    enqueuePieceWithPriority()
+  }
+}
+
 function updateAccount(key, value) {
   let element = document.getElementById(key);
   if (element) {
@@ -57,6 +66,7 @@ let account = new Proxy(accountValues, {
 
 function play() {
   resetGame();
+  initPieceQueue();
   addEventListener();
 
   if(requestID) {
@@ -171,4 +181,18 @@ function* colorCycleGenerator(COLORS) {
     yield COLORS[index % COLORS.length];
     index++;
   }
+}
+
+function enqueuePieceWithPriority() {
+  const available = [...Array(SHAPES.length).keys()];
+  const typeID = Math.floor(Math.random() * available.length);
+  const priority = (typeID === lastTypeID) ? Math.random() * 0.3 : Math.random()
+  pieceQueue.enqueue(typeID, priority);
+}
+
+function getNextPieceType() {
+  const typeID = pieceQueue.dequeue('highest');
+  lastTypeID = typeID;
+  enqueuePieceWithPriority();
+  return typeID;
 }

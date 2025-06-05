@@ -35,8 +35,6 @@ const KEY = {
   SPACE: 32,
 }
 
-Object.freeze(KEY);
-
 const POINTS = {
   SINGLE: 100,
   DOUBLE: 300,
@@ -52,3 +50,7 @@ const LEVEL = {
   2: 630,
   3: 550,
 }
+
+[COLORS, SHAPES, KEY, LEVEL, POINTS].forEach(item => {
+  Object.freeze(item)
+});
