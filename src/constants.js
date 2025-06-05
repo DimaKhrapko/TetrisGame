@@ -10,9 +10,6 @@ const NO_OF_HIGH_SCORES = 10;
 const HIGH_SCORES = 'highScores';
 
 
-
-const lowestScore = highScores[NO_OF_HIGH_SCORES - 1]?.score ?? 0
-
 const COLORS = [
   'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
 ]
@@ -27,12 +24,11 @@ const SHAPES = [
   [[7, 7, 0], [0, 7, 7], [0, 0, 0]]
 ]
 
-const KEY = {
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  SPACE: 32,
+const LEVEL = {
+  0: 800,
+  1: 720,
+  2: 630,
+  3: 550,
 }
 
 const POINTS = {
@@ -44,13 +40,13 @@ const POINTS = {
   HARD_DROP: 2,
 }
 
-const LEVEL = {
-  0: 800,
-  1: 720,
-  2: 630,
-  3: 550,
+const KEY = {
+  LEFT: 37,
+  UP: 38,
+  RIGHT: 39,
+  DOWN: 40,
+  SPACE: 32,
 }
 
-[COLORS, SHAPES, KEY, LEVEL, POINTS].forEach(item => {
-  Object.freeze(item)
-});
+const lowestScore = highScores[NO_OF_HIGH_SCORES - 1]?.score ?? 0
+
