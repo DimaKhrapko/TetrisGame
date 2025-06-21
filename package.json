@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/DimaKhrapko/TetrisGame/issues"
   },
-  "homepage": "https://github.com/DimaKhrapko/TetrisGame#readme"
+  "homepage": "https://github.com/DimaKhrapko/TetrisGame#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
 }
